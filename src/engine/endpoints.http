@@ -1,0 +1,10 @@
+### get the question
+GET localhost:8889/api/quiz
+
+### post the answer
+POST localhost:8889/api/quiz
+content-type:application/json
+
+{
+  "answer": 2
+}
