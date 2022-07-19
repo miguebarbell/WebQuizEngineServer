@@ -20,35 +20,34 @@ public class WebQuizEngine {
     }
 
     Question question = new Question(
-        1,
+        2,
         "Mass Capital",
         "Which of the next cities is the capital of MA?",
-        Arrays.asList("Salem", "Boston", "Houston", "Manchester"));
+        Arrays.asList("Salem", "Houston", "Boston", "Manchester"));
+
 
     @RestController
     public class QuizController {
+
         @GetMapping("/api/quiz")
         public String getQuiz() {
             ObjectMapper objectMapper = new ObjectMapper();
-//            String jsonResponse;
-//            Question question = new Question(
-//                1,
-//                "Mass Capital",
-//                "Which of the next cities is the capital of MA?",
-//                Arrays.asList("Salem", "Boston", "Houston", "Manchester"));
             try {
-                return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(question);
-//                return jsonResponse;
+                return objectMapper.writeValueAsString(question);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
 
         }
 
-        @PostMapping("/api/quiz")
+        @PostMapping(value = "/api/quiz")
         public String response(@RequestBody Map<String, Integer> response) throws JsonProcessingException {
             Integer answer = response.get("answer");
             return question.answer(answer);
+        }
+        @PostMapping(value = "/api/quiz", consumes = "application/x-www-form-urlencoded")
+        public String responseForm(String answer) throws JsonProcessingException {
+            return question.answer(Integer.parseInt(answer));
         }
     }
 
