@@ -18,6 +18,11 @@ content-type:application/json
   ]
 }
 
+### get the question id=0
+GET localhost:8889/api/quizzes/1
+
+
+
 ### post the answer
 POST localhost:8889/api/quizzes/1/solve
 content-type:application/json

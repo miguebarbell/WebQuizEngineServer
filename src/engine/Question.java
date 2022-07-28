@@ -9,24 +9,37 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.constraints.Min;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
+
+@Entity(name = "question")
 @JsonPropertyOrder({"id", "title", "text", "options"})
 public class Question {
 	@JsonIgnore
-	public final List<Integer> answer;
-	@Min(value = 1)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@ElementCollection
+//	@CollectionTable(name = "answer_table", joinColumns = @JoinColumn(name = "id"))
+//	@Column(name = "answer")
+	public List<Integer> answer = new ArrayList<>();
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(nullable = false)
 	public int id;
 	@NotBlank
+	@Column
 	public String title;
 	@NotBlank
+	@Column
 	public String text;
 	@Size(min = 2, max = 4)
-	public List<String> options;
-	ObjectMapper objectMapper = new ObjectMapper();
+//	@Column(name = "options")
+	@ElementCollection
+//	@CollectionTable(name = "options_table", joinColumns = @JoinColumn(name = "id"))
+	public List<String> options = new ArrayList<>();
 
 	@JsonCreator
 	public Question(@JsonProperty("answer") List<Integer> answer,
@@ -34,9 +47,11 @@ public class Question {
 	                @JsonProperty("text") String text,
 	                @JsonProperty("options") List<String> options) {
 		if (answer != null && answer.size() > 4) {
+			System.out.println("bad request for answer");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		if (options == null || options.size() < 2 || options.size() > 4) {
+			System.out.println("bad request for options");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		this.answer = answer;
@@ -45,9 +60,21 @@ public class Question {
 		this.options = options;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public Question() {
+
 	}
+
+	public int getId() {
+		return id;
+	}
+
+//	public List<Integer> getAnswer() {
+//		return answer;
+//	}
+
+	//	public void setId(int id) {
+//		this.id = id;
+//	}
 
 	@Override
 	public String toString() {
@@ -60,6 +87,7 @@ public class Question {
 	}
 
 	public String answer(List<Integer> attempt) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
 		@JsonPropertyOrder({"success", "feedback"})
 		class Answer {
 			public final boolean success;
