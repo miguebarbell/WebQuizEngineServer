@@ -1,13 +1,3 @@
-### get the question
-GET localhost:8889/api/quiz
-
-### post the answer
-POST localhost:8889/api/quiz
-content-type:application/json
-
-{
-  "answer": 2
-}
 
 ### post a new quizz
 POST localhost:8889/api/quizzes
@@ -22,7 +12,70 @@ content-type:application/json
     "Cup of coffee",
     "Bug"
   ],
-  "answer": 2
+  "answer": [
+    0,
+    2
+  ]
+}
+
+### post the answer
+POST localhost:8889/api/quizzes/1/solve
+content-type:application/json
+
+{
+  "answer": [
+    0,
+    2
+  ]
+}
+
+### post a empty answer new quizz
+POST localhost:8889/api/quizzes
+content-type:application/json
+
+{
+  "title": "Math3",
+  "text": "Which of the following is equal to 4?",
+  "options": [
+    "2*3",
+    "5*8",
+    "8*0",
+    "1*5"
+  ],
+  "answer": []
+}
+
+### post the answer
+POST localhost:8889/api/quizzes/2/solve
+content-type:application/json
+
+{
+  "answer": [
+  ]
+}
+
+### post a null answer new question
+POST localhost:8889/api/quizzes
+content-type:application/json
+
+{
+  "answer": null,
+  "title": "Math4",
+  "text": "Which of the following is equal to 4?",
+  "options": [
+    "2*3",
+    "5*8",
+    "8*0",
+    "1*5"
+  ]
+}
+
+### post the answer
+POST localhost:8889/api/quizzes/3/solve
+content-type:application/json
+
+{
+  "answer": null
 }
 
 ### get all questions from the server

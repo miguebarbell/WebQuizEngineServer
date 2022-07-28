@@ -53,43 +53,51 @@ public class WebQuizEngine {
 		}
 
 		@PostMapping(value = "/api/quizzes/{id}/solve")
-		public String response(@RequestBody Map<String, Integer> response, @PathVariable int id) throws JsonProcessingException {
-			int answer = response.get("answer");
+		public String response(@RequestBody Map<String, List<Integer>> response, @PathVariable int id) throws JsonProcessingException {
+			List<Integer> answer = response.get("answer");
 			Question questionFound = null;
+
 			for (Question question : questions) {
 				if (question.id == id) {
 					questionFound = question;
+					System.out.println("questionFound = " + questionFound);
 				}
 			}
 			if (questionFound == null) {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 			}
+			System.out.println("questionFound json post");
 			return questionFound.answer(answer);
 		}
 
 		@PostMapping(value = "/api/quizzes/{id}/solve", consumes = "application/x-www-form-urlencoded")
-		public String responseForm(String answer, @PathVariable int id) throws JsonProcessingException {
+		public String responseForm(List<Integer> answer, @PathVariable int id) throws JsonProcessingException {
 			// fixme: this is duplicated
+
 			Question questionFound = null;
 			for (Question question : questions) {
+				// this will be replaced for JPA methods
 				if (question.id == id) {
 					questionFound = question;
+					System.out.println("questionFound = " + questionFound);
 				}
 			}
 			if (questionFound == null) {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 			}
-			return questionFound.answer(Integer.parseInt(answer));
+			System.out.println("questionFound x-www-form-urlencoded");
+			return questionFound.answer(answer);
 		}
 
 		@PostMapping(value = "/api/quizzes")
 		public String newQuestion(@RequestBody Question newQuestion) {
 			newQuestion.setId(questions.size() + 1);
 			questions.add(newQuestion);
+			System.out.println("newQuestion = " + newQuestion);
 			try {
 				return objectMapper.writeValueAsString(newQuestion);
 			} catch (JsonProcessingException e) {
-				throw new RuntimeException(e);
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 			}
 		}
 
