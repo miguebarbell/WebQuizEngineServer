@@ -62,6 +62,7 @@ content-type:application/json
 ### post a null answer new question
 POST localhost:8889/api/quizzes
 content-type:application/json
+authorization: Basic test@gmail.com secret
 
 {
   "answer": null,
@@ -83,8 +84,35 @@ content-type:application/json
   "answer": null
 }
 
-### get all questions from the server
+### get all questions from the server with auth
 GET localhost:8889/api/quizzes
+authorization: Basic test@gmail.com qwerty
+
+### get all question no auth
+GET localhost:8889/api/quizzes/
 
 ### get a inexiting question
 GET localhost:8889/api/quizzes/13
+
+### register an user
+POST localhost:8889/api/register/
+content-type:application/json
+
+{
+  "email": "test@google.com",
+  "password": "qwerty"
+}
+
+
+### register an user
+POST localhost:8889/api/register/
+content-type:application/json
+
+{
+  "email": "user@google.com",
+  "password": "12345"
+}
+
+### deleting the quizz
+DELETE localhost:8889/api/quizzes/3
+authorization: Basic test@gmail.com qwerty

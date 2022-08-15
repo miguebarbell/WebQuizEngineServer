@@ -19,12 +19,15 @@ import java.util.List;
 @Entity(name = "question")
 @JsonPropertyOrder({"id", "title", "text", "options"})
 public class Question {
+	//	todo: should be include the user
 	@JsonIgnore
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@ElementCollection
 //	@CollectionTable(name = "answer_table", joinColumns = @JoinColumn(name = "id"))
 //	@Column(name = "answer")
 	public List<Integer> answer = new ArrayList<>();
+	@JsonIgnore
+	public String email;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(nullable = false)
@@ -40,7 +43,6 @@ public class Question {
 	@ElementCollection
 //	@CollectionTable(name = "options_table", joinColumns = @JoinColumn(name = "id"))
 	public List<String> options = new ArrayList<>();
-
 	@JsonCreator
 	public Question(@JsonProperty("answer") List<Integer> answer,
 	                @JsonProperty("title") String title,
@@ -62,6 +64,14 @@ public class Question {
 
 	public Question() {
 
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public int getId() {
